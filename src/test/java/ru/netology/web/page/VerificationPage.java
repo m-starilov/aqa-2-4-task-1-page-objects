@@ -8,10 +8,6 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 public class VerificationPage {
-    //  @FindBy(css = "[data-test-id=code] input")
-//  private SelenideElement codeField;
-//  @FindBy(css = "[data-test-id=action-verify]")
-//  private SelenideElement verifyButton;
     private final SelenideElement codeField = $("[data-test-id=code] input");
     private final SelenideElement verifyButton = $("[data-test-id=action-verify]");
 

@@ -14,15 +14,15 @@ public class ReplenishPage {
     private SelenideElement fromField = $("[data-test-id=from] input");
     private SelenideElement replenishButton = $(byText("Пополнить"));
     private SelenideElement errorMassage = $(byText("Ошибка!"));
+    private String deleteString = Keys.chord(Keys.CONTROL, "a") + Keys.DELETE;
 
     public ReplenishPage() {
         heading.shouldBe(visible);
     }
 
     public DashboardPage makeTransaction(DataHelper.DataForTransaction dataForTransaction) {
-        amountField.doubleClick().sendKeys(Keys.BACK_SPACE);
-        amountField.setValue(dataForTransaction.getAmount());
-        fromField.setValue(dataForTransaction.getAccount());
+        amountField.setValue(deleteString).setValue(dataForTransaction.getAmount());
+        fromField.setValue(deleteString).setValue(dataForTransaction.getAccountFrom());
         replenishButton.click();
         return new DashboardPage();
     }

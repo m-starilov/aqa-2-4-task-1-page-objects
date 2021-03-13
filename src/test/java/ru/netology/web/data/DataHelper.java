@@ -10,29 +10,16 @@ public class DataHelper {
 
     @Getter
     @Setter
-    private static int expectedFirstAccountBalance;
-
-    @Getter
-    @Setter
-    private static int expectedSecondAccountBalance;
-
-    @Getter
-    @Setter
     private static int actualFirstAccountBalance;
 
     @Getter
     @Setter
     private static int actualSecondAccountBalance;
 
-    public static void setActualBalance() {
-        DataHelper.setExpectedFirstAccountBalance(actualFirstAccountBalance);
-        DataHelper.setExpectedSecondAccountBalance(actualSecondAccountBalance);
-    }
-
     @Value
     public static class AuthInfo {
-        private String login;
-        private String password;
+        String login;
+        String password;
     }
 
     public static AuthInfo getAuthInfo() {
@@ -41,7 +28,7 @@ public class DataHelper {
 
     @Value
     public static class VerificationCode {
-        private String code;
+        String code;
     }
 
     public static VerificationCode getVerificationCodeFor(AuthInfo authInfo) {
@@ -50,71 +37,29 @@ public class DataHelper {
 
     @Value
     public static class DataForTransaction {
-        private String account;
-        private String amount;
+        String accountFrom;
+        String amount;
     }
 
-    public static DataForTransaction dataForRestoreFirstAccount() {
-        int restoreAmount = (actualSecondAccountBalance - actualFirstAccountBalance) / 2;
-        return new DataForTransaction("5559 0000 0000 0002", Integer.toString(restoreAmount));
+    public static DataForTransaction dataForRestoreAccounts(Integer restoreAmount) {
+        String accountFrom;
+        String amount;
+        if (restoreAmount > 0) {
+            accountFrom = "5559 0000 0000 0001";
+        }
+        else {
+            restoreAmount = Math.abs(restoreAmount);
+            accountFrom = "5559 0000 0000 0002";
+        }
+        amount = Integer.toString(restoreAmount);
+        return new DataForTransaction(accountFrom, amount);
     }
 
-    public static DataForTransaction dataForRestoreSecondAccount() {
-        int restoreAmount = (actualFirstAccountBalance - actualSecondAccountBalance) / 2;
-        return new DataForTransaction("5559 0000 0000 0001", Integer.toString(restoreAmount));
+    public static DataForTransaction dataForTransfer(String accountFrom, Integer amount) {
+        return new DataForTransaction(accountFrom, Integer.toString(amount));
     }
 
-    public static DataForTransaction dataForTransferFrom2ndTo1st1() {
-        expectedFirstAccountBalance += 1;
-        expectedSecondAccountBalance -= 1;
-        return new DataForTransaction("5559 0000 0000 0002", "1");
-    }
-
-    public static DataForTransaction dataForTransferFrom1stTo2nd1() {
-        expectedFirstAccountBalance -= 1;
-        expectedSecondAccountBalance += 1;
-        return new DataForTransaction("5559 0000 0000 0001", "1");
-    }
-
-    public static DataForTransaction dataForTransferFrom2ndTo1st1500() {
-        expectedFirstAccountBalance += 1500;
-        expectedSecondAccountBalance -= 1500;
-        return new DataForTransaction("5559 0000 0000 0002", "1500");
-    }
-
-    public static DataForTransaction dataForTransferFrom1stTo2nd1500() {
-        expectedFirstAccountBalance -= 1500;
-        expectedSecondAccountBalance += 1500;
-        return new DataForTransaction("5559 0000 0000 0001", "1500");
-    }
-
-    public static DataForTransaction dataForTransferFrom2ndTo1stMax() {
-        expectedFirstAccountBalance += actualSecondAccountBalance;
-        expectedSecondAccountBalance -= actualSecondAccountBalance;
-        return new DataForTransaction("5559 0000 0000 0002", Integer.toString(actualSecondAccountBalance));
-    }
-
-    public static DataForTransaction dataForTransferFrom1stTo2ndMax() {
-        expectedFirstAccountBalance -= actualFirstAccountBalance;
-        expectedSecondAccountBalance += actualFirstAccountBalance;
-        return new DataForTransaction("5559 0000 0000 0001", Integer.toString(actualFirstAccountBalance));
-    }
-
-    public static DataForTransaction dataForTransferFrom2ndTo1stOverMax() {
-        return new DataForTransaction("5559 0000 0000 0002",
-                Integer.toString(actualSecondAccountBalance + 100));
-    }
-
-    public static DataForTransaction dataForTransferFrom1stTo2ndOverMax() {
-        return new DataForTransaction("5559 0000 0000 0001",
-                Integer.toString(actualFirstAccountBalance + 100));
-    }
-
-    public static DataForTransaction dataForTransferFrom1stTo1st1500() {
-        return new DataForTransaction("5559 0000 0000 0001", "1500");
-    }
-
-    public static DataForTransaction dataForTransferFrom2ndTo2nd1500() {
-        return new DataForTransaction("5559 0000 0000 0002", "1500");
+    public static Integer getRestoreAmount() {
+        return (actualFirstAccountBalance - actualSecondAccountBalance) / 2;
     }
 }
